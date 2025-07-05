@@ -7,13 +7,14 @@
 #include <pigpio.h>
 
 #include "PCA9685_RasPi/PCA9685_Raspi.hpp"
-#include "mecanum.hpp"
+#include "Mecanum_on_Ros2/include/mecanum_wheel/mecanum.hpp"
 #include "types.hpp"
 
 class MecanumPCA9685_GPIO {
 private:
   CTYPE pwm_control[4];
-  CTYPE dir_control[4];
+  DIRTYPE dir_control[4];
+
 
   std::array<std::optional<PCA9685_RasPi>, 4> pwm_pcaControllers;
   std::array<std::optional<PCA9685_RasPi>, 4> dir_pcaControllers;
@@ -21,7 +22,7 @@ private:
   Mecanum mw;
 
 public:
-  MecanumPCA9685_GPIO(CTYPE pwm_control_[4], CTYPE dir_control_[4]) {
+  MecanumPCA9685_GPIO(CTYPE pwm_control_[4], DIRTYPE dir_control_[4]) {
 
     for (int i = 0; i < 4; i++) {
       // pwm instance setting
@@ -68,6 +69,7 @@ public:
     */
 
     for (int i = 0; i < 4; ++i) {
+
       if (pwm_control[i].controlType == ControlType::PCA9685 &&
           pwm_pcaControllers[i]) {
         pwm_pcaControllers[i]->setPwm(pwm_control[i].channel, mw.getPwm(i));
@@ -75,15 +77,64 @@ public:
         PwmGpio(pwm_control[i].channel, mw.getPwm(i));
       }
 
+      int direction = (dir_control[i].dir_conf ? -1 : 1) * mw.getDir(i);
+
       if (dir_control[i].controlType == ControlType::PCA9685 &&
           dir_pcaControllers[i]) {
-        dir_pcaControllers[i]->setPwm(dir_control[i].channel, mw.getDir(i));
+        dir_pcaControllers[i]->setPwm(dir_control[i].channel, direction);
       } else if (dir_control[i].controlType == ControlType::RASPIGPIO) {
         gpioWrite(dir_control[i].channel, mw.getDir(i));
       }
     }
   }
 
+  void printControlInfo()
+  {
+    std::cout << "----- PWM -----" << std::endl;
+    for(int i=0;i<4;i++)
+    {
+      std::cout << "--" << i << "--" << std::endl;
+    switch (pwm_control[i].controlType)
+    {
+    case ControlType::RASPIGPIO:
+        std::cout << "controlType: " << "RASPIGPIO" << std::endl;
+      break;
+
+    case ControlType::PCA9685:
+        std::cout << "controlType: " << "PCA9685" << std::endl;
+      break;
+    
+    default:
+      break;
+    }
+    std::cout << "PCA9685Id: " << pwm_control[i].PCA9685Id << std::endl;
+    std::cout << "Channel: " << pwm_control[i].channel << std::endl;
+    std::cout << "Frequency: " << pwm_control[i].freq << std::endl;
+    }
+
+    std::cout << "----- DIR -----" << std::endl;
+    for(int i=0;i<4;i++)
+    {
+      std::cout << "--" << i << "--" << std::endl;
+    switch (dir_control[i].controlType)
+    {
+    case ControlType::RASPIGPIO:
+        std::cout << "controlType: " << "RASPIGPIO" << std::endl;
+      break;
+
+    case ControlType::PCA9685:
+        std::cout << "controlType: " << "PCA9685" << std::endl;
+      break;
+    
+    default:
+      break;
+    }
+    std::cout << "PCA9685Id: " << dir_control[i].PCA9685Id << std::endl;
+    std::cout << "Channel: " << dir_control[i].channel << std::endl;
+    std::cout << "Frequency: " << dir_control[i].freq << std::endl;
+    std::cout << "direction: " << dir_control[i].dir_conf << std::endl;
+    }
+  }
 private:
   void PwmGpio(int pinName, float unitInterval) {
     gpioPWM(pinName, static_cast<int>(255.0 * unitInterval));

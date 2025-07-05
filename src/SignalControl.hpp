@@ -6,6 +6,6 @@
 
 
 CTYPE pwm_controls[4];
-CTYPE dir_controls[4];
+DIRTYPE dir_controls[4];
 
 #endif
