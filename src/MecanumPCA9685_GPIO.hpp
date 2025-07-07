@@ -12,7 +12,7 @@
 
 class MecanumPCA9685_GPIO {
 private:
-  CTYPE pwm_control[4];
+  PWMTYPE pwm_control[4];
   DIRTYPE dir_control[4];
 
 
@@ -22,7 +22,7 @@ private:
   Mecanum mw;
 
 public:
-  MecanumPCA9685_GPIO(CTYPE pwm_control_[4], DIRTYPE dir_control_[4]) {
+  MecanumPCA9685_GPIO(PWMTYPE pwm_control_[4], DIRTYPE dir_control_[4]) {
 
     for (int i = 0; i < 4; i++) {
       // pwm instance setting

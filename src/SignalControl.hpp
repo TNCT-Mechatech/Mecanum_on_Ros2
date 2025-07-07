@@ -5,7 +5,7 @@
 #include "types.hpp"
 
 
-CTYPE pwm_controls[4];
+PWMTYPE pwm_controls[4];
 DIRTYPE dir_controls[4];
 
 #endif
