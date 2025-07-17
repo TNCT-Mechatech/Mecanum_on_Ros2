@@ -7,6 +7,7 @@ struct PWMTYPE {
   int PCA9685Id;           // PCAを使用しない場合は0未満の値で初期化
   int channel;             // GPIO, PCA9685のpin name
   float freq;              // pwmの周波数
+  int handle;
 };
 
 struct DIRTYPE {
@@ -15,4 +16,5 @@ struct DIRTYPE {
   int channel;             // GPIO, PCA9685のpin name
   float freq;              // pwmの周波数
   bool dir_conf;           // false: 正転, true: 逆転
+  int handle;
 };
