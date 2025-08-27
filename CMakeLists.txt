@@ -6,7 +6,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # set pigpio directory
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /home/mechatech/pigpio-master/util)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /home/malakontani/pigpio-master/util)
 
 # pigpio ライブラリとヘッダーファイルの指定
 include_directories(/usr/local/include)
